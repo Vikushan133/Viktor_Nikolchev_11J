@@ -1,0 +1,48 @@
+@model IEnumerable<ShoppingCart.Models.Cart>
+
+@{
+    ViewData["Title"] = "Колички";
+}
+
+<h1>Колички</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Създай количка</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Клиент</th>
+            <th>Дата</th>
+            <th>Обща цена</th>
+            <th>Статус</th>
+            <th>Адрес</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CartId</td>
+                <td>@item.CustomerName</td>
+                <td>@item.DateCreated.ToShortDateString()</td>
+                <td>@item.TotalPrice.ToString("F2") лв.</td>
+                <td>
+                    <span class="badge @(item.Status == ShoppingCart.Models.CartStatus.Active ? "bg-success" :
+                        item.Status == ShoppingCart.Models.CartStatus.Ordered ? "bg-warning" : "bg-secondary")">
+                        @item.Status
+                    </span>
+                </td>
+                <td>@item.Address</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.CartId" class="btn btn-sm btn-info">Детайли</a>
+                    <a asp-action="EditStatus" asp-route-id="@item.CartId" class="btn btn-sm btn-warning">Статус</a>
+                    <a asp-action="Delete" asp-route-id="@item.CartId" class="btn btn-sm btn-danger">Изтрий</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

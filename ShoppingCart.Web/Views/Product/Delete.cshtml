@@ -1,0 +1,28 @@
+@model ShoppingCart.Models.Product
+
+@{
+    ViewData["Title"] = "Изтрий продукт";
+}
+
+<h1>Изтрий продукт</h1>
+
+<div class="alert alert-danger">
+    <h4>Сигурни ли сте, че искате да изтриете този продукт?</h4>
+</div>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Име</dt>
+        <dd class="col-sm-10">@Model.Name</dd>
+        <dt class="col-sm-2">Цена</dt>
+        <dd class="col-sm-10">@Model.Price.ToString("F2") лв.</dd>
+        <dt class="col-sm-2">Наличност</dt>
+        <dd class="col-sm-10">@Model.StockQuantity</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="ProductId" />
+    <button type="submit" class="btn btn-danger">Изтрий</button>
+    <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+</form>

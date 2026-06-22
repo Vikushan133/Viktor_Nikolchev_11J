@@ -4,4 +4,5 @@
   <Project Path="ShoppingCart.Models/ShoppingCart.Models.csproj" />
   <Project Path="ShoppingCart.Services/ShoppingCart.Services.csproj" />
   <Project Path="ShoppingCart.Tests/ShoppingCart.Tests.csproj" />
+  <Project Path="ShoppingCart.Web/ShoppingCart.Web.csproj" />
 </Solution>

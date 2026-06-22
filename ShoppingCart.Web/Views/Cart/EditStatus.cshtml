@@ -1,0 +1,17 @@
+@model ShoppingCart.Models.Cart
+
+@{
+    ViewData["Title"] = "Промени статус";
+}
+
+<h1>Промени статус на количка #@Model.CartId</h1>
+
+<form asp-action="EditStatus">
+    <input type="hidden" name="id" value="@Model.CartId" />
+    <div class="mb-3">
+        <label class="form-label">Текущ статус</label>
+        <select name="status" class="form-select" asp-items="ViewBag.Statuses"></select>
+    </div>
+    <button type="submit" class="btn btn-primary">Запази</button>
+    <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+</form>

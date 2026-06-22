@@ -1,0 +1,21 @@
+@model ShoppingCart.Models.Cart
+
+@{
+    ViewData["Title"] = "Създай количка";
+}
+
+<h1>Създай количка</h1>
+
+<form asp-action="Create">
+    <div class="mb-3">
+        <label asp-for="CustomerName" class="form-label"></label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Address" class="form-label"></label>
+        <input asp-for="Address" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Създай</button>
+    <a asp-action="Index" class="btn btn-secondary">Отказ</a>
+</form>

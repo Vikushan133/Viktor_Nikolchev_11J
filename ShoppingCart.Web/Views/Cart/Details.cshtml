@@ -1,0 +1,65 @@
+@model ShoppingCart.Models.Cart
+
+@{
+    ViewData["Title"] = $"Количка #{Model.CartId}";
+}
+
+<h1>Количка #@Model.CartId</h1>
+
+<div class="mb-3">
+    <dl class="row">
+        <dt class="col-sm-2">Клиент</dt>
+        <dd class="col-sm-10">@Model.CustomerName</dd>
+        <dt class="col-sm-2">Дата</dt>
+        <dd class="col-sm-10">@Model.DateCreated.ToString("dd.MM.yyyy HH:mm")</dd>
+        <dt class="col-sm-2">Статус</dt>
+        <dd class="col-sm-10">@Model.Status</dd>
+        <dt class="col-sm-2">Адрес</dt>
+        <dd class="col-sm-10">@Model.Address</dd>
+    </dl>
+</div>
+
+<h3>Артикули в количката</h3>
+
+<p>
+    <a asp-action="AddItem" asp-route-cartId="@Model.CartId" class="btn btn-success">Добави продукт</a>
+</p>
+
+@if (Model.CartItems.Count == 0)
+{
+    <p>Количката е празна.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Продукт</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Общо</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>@(item.Product?.Name ?? "Неизвестен")</td>
+                    <td>@item.UnitPrice.ToString("F2") лв.</td>
+                    <td>@item.Quantity</td>
+                    <td>@((item.Quantity * item.UnitPrice).ToString("F2")) лв.</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="fw-bold">
+                <td colspan="3" class="text-end">Обща цена:</td>
+                <td>@Model.TotalPrice.ToString("F2") лв.</td>
+            </tr>
+        </tfoot>
+    </table>
+}
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Обратно</a>
+</div>

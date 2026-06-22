@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Добави продукт в количка";
+}
+
+<h1>Добави продукт в количка</h1>
+
+<form asp-action="AddItem">
+    <input type="hidden" name="cartId" value="@ViewBag.CartId" />
+
+    <div class="mb-3">
+        <label class="form-label">Продукт</label>
+        <select name="productId" class="form-select" asp-items="ViewBag.Products"></select>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Количество</label>
+        <input name="quantity" type="number" min="1" value="1" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Добави</button>
+    <a asp-action="Details" asp-route-id="@ViewBag.CartId" class="btn btn-secondary">Отказ</a>
+</form>

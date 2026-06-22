@@ -2,6 +2,7 @@ bin/
 obj/
 *.db
 *.user
+~*
 .vs/
 *.suo
 *.userprefs

@@ -1,0 +1,42 @@
+@model IEnumerable<ShoppingCart.Models.Product>
+
+@{
+    ViewData["Title"] = "Продукти";
+}
+
+<h1>Продукти</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Добави продукт</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Име</th>
+            <th>Описание</th>
+            <th>Цена</th>
+            <th>Наличност</th>
+            <th>Категория</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductId</td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>@item.Price.ToString("F2") лв.</td>
+                <td>@item.StockQuantity</td>
+                <td>@item.Category</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-sm btn-warning">Редактирай</a>
+                    <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-sm btn-danger">Изтрий</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

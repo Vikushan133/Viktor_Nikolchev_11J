@@ -15,7 +15,7 @@ var cartService = new CartService(context);
 
 while (true)
 {
-    Console.Clear();
+    try { Console.Clear(); } catch { /* no console available */ }
     Console.WriteLine("=== ПАЗАРСКА КОЛИЧКА ===");
     Console.WriteLine();
     Console.WriteLine("1. Покажи всички продукти");
