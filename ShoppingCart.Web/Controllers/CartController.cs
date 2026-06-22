@@ -1,10 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ShoppingCart.Models;
 using ShoppingCart.Services;
+using ShoppingCart.Web.Models;
 
 namespace ShoppingCart.Web.Controllers;
 
+[Authorize]
 public class CartController : Controller
 {
     private readonly CartService _cartService;
@@ -18,80 +21,84 @@ public class CartController : Controller
 
     public IActionResult Index()
     {
-        var carts = _cartService.GetAllCarts();
-        return View(carts);
-    }
-
-    public IActionResult Details(int id)
-    {
-        var cart = _cartService.GetCart(id);
+        var userId = User.GetUserId();
+        var cart = _cartService.GetActiveCartByUser(userId);
         if (cart == null)
-            return NotFound();
-        return View(cart);
-    }
-
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public IActionResult Create(Cart cart)
-    {
-        if (ModelState.IsValid)
         {
+            cart = new Cart
+            {
+                CustomerName = User.Identity.Name,
+                UserId = userId,
+                DateCreated = DateTime.Now,
+                TotalPrice = 0,
+                Status = CartStatus.Active,
+                Address = ""
+            };
             _cartService.CreateCart(cart);
-            return RedirectToAction(nameof(Index));
         }
         return View(cart);
     }
 
-    public IActionResult AddItem(int cartId, int? productId)
+    public IActionResult AddItem(int productId)
     {
-        ViewBag.CartId = cartId;
-        ViewBag.Products = new SelectList(_productService.GetAll(), "ProductId", "Name", productId);
-        return View();
-    }
-
-    [HttpPost]
-    public IActionResult AddItem(int cartId, int productId, int quantity)
-    {
-        _cartService.AddToCart(cartId, productId, quantity);
-        return RedirectToAction(nameof(Details), new { id = cartId });
-    }
-
-    public IActionResult EditStatus(int id)
-    {
-        var cart = _cartService.GetCart(id);
+        var userId = User.GetUserId();
+        var cart = _cartService.GetActiveCartByUser(userId);
         if (cart == null)
-            return NotFound();
-
-        ViewBag.Statuses = new SelectList(
-            new[] { CartStatus.Active, CartStatus.Ordered, CartStatus.Shipped },
-            cart.Status);
-
-        return View(cart);
-    }
-
-    [HttpPost]
-    public IActionResult EditStatus(int id, CartStatus status)
-    {
-        _cartService.UpdateStatus(id, status);
+        {
+            cart = new Cart
+            {
+                CustomerName = User.Identity.Name,
+                UserId = userId,
+                DateCreated = DateTime.Now,
+                TotalPrice = 0,
+                Status = CartStatus.Active,
+                Address = ""
+            };
+            _cartService.CreateCart(cart);
+        }
+        _cartService.AddToCart(cart.CartId, productId, 1);
         return RedirectToAction(nameof(Index));
     }
 
-    public IActionResult Delete(int id)
+    public IActionResult Checkout()
     {
-        var cart = _cartService.GetCart(id);
-        if (cart == null)
-            return NotFound();
+        var userId = User.GetUserId();
+        var cart = _cartService.GetActiveCartByUser(userId);
+        if (cart == null || !cart.CartItems.Any())
+            return RedirectToAction(nameof(Index));
         return View(cart);
     }
 
-    [HttpPost, ActionName("Delete")]
-    public IActionResult DeleteConfirmed(int id)
+    [HttpPost]
+    public IActionResult Checkout(string address)
     {
-        _cartService.DeleteCart(id);
+        var userId = User.GetUserId();
+        var cart = _cartService.GetActiveCartByUser(userId);
+        if (cart == null || !cart.CartItems.Any())
+            return RedirectToAction(nameof(Index));
+
+        cart.Address = address;
+        cart.Status = CartStatus.Ordered;
+        _cartService.UpdateStatus(cart.CartId, CartStatus.Ordered);
+
+        return RedirectToAction("Index", "Order");
+    }
+
+    public IActionResult RemoveItem(int cartItemId)
+    {
+        var userId = User.GetUserId();
+        var cart = _cartService.GetActiveCartByUser(userId);
+        if (cart != null)
+        {
+            var item = cart.CartItems.FirstOrDefault(ci => ci.CartItemId == cartItemId);
+            if (item != null)
+            {
+                using var scope = HttpContext.RequestServices.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ShoppingCart.Data.ShoppingCartContext>();
+                context.CartItems.Remove(item);
+                context.SaveChanges();
+            }
+        }
         return RedirectToAction(nameof(Index));
     }
 }

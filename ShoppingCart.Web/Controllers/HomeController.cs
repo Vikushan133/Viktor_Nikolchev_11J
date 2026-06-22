@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingCart.Services;
-using ShoppingCart.Models;
 using ShoppingCart.Web.Models;
 
 namespace ShoppingCart.Web.Controllers;
@@ -20,11 +19,13 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         var products = _productService.GetAll();
-        var carts = _cartService.GetAllCarts();
-        ViewBag.TotalProducts = products.Count;
-        ViewBag.TotalCarts = carts.Count;
-        ViewBag.ActiveCarts = carts.Count(c => c.Status == CartStatus.Active);
-        return View(products.Take(3).ToList());
+        var categories = products.Select(p => p.Category).Distinct().ToList();
+        ViewBag.Categories = products
+            .GroupBy(p => p.Category)
+            .Select(g => g.First())
+            .Take(8)
+            .ToList();
+        return View(products.Take(8).ToList());
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

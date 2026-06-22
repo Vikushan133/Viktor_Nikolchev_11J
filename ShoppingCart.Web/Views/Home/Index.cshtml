@@ -1,63 +1,82 @@
-﻿@model List<ShoppingCart.Models.Product>
-
+﻿@model List<Product>
 @{
     ViewData["Title"] = "Начало";
 }
 
-<div class="text-center mb-5">
-    <h1 class="display-4">Онлайн магазин</h1>
-    <p class="lead">Добре дошли в нашия онлайн магазин с пазарска количка.</p>
-</div>
-
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card text-white bg-primary mb-3">
-            <div class="card-body text-center">
-                <h5 class="card-title">Продукти</h5>
-                <p class="display-6">@ViewBag.TotalProducts</p>
-                <a asp-controller="Product" asp-action="Index" class="text-white">Разгледай</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-success mb-3">
-            <div class="card-body text-center">
-                <h5 class="card-title">Активни колички</h5>
-                <p class="display-6">@ViewBag.ActiveCarts</p>
-                <a asp-controller="Cart" asp-action="Index" class="text-white">Виж всички</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-info mb-3">
-            <div class="card-body text-center">
-                <h5 class="card-title">Общо колички</h5>
-                <p class="display-6">@ViewBag.TotalCarts</p>
-                <a asp-controller="Cart" asp-action="Index" class="text-white">Детайли</a>
-            </div>
-        </div>
+<!-- Hero Banner -->
+<div class="bg-dark text-white py-5 mb-4">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">Fashion Store</h1>
+        <p class="lead">Открий най-новите тенденции в модата</p>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-light btn-lg mt-3">Разгледай продуктите</a>
     </div>
 </div>
 
-@if (Model.Any())
+<!-- Categories -->
+@if (ViewBag.Categories != null)
 {
-    <h3>Някои от нашите продукти</h3>
-    <div class="row">
+    var categories = ViewBag.Categories as List<Product>;
+    <div class="container mb-5">
+        <h2 class="mb-4">Категории</h2>
+        <div class="row g-3">
+            @foreach (var cat in categories.Select(p => p.Category).Distinct().Take(4))
+            {
+                var catId = categories.First(p => p.Category == cat).CategoryId;
+                var img = categories.First(p => p.Category == cat).ImageUrl;
+                <div class="col-md-3">
+                    <a asp-controller="Product" asp-action="Index" asp-route-categoryId="@catId" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm category-card">
+                            <img src="@img" class="card-img-top" alt="@cat" style="height: 200px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title text-dark">@cat</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<!-- Featured Products -->
+<div class="container mb-5">
+    <h2 class="mb-4">Популярни продукти</h2>
+    <div class="row g-4">
         @foreach (var product in Model)
         {
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text">@product.Description</p>
-                        <p class="card-text"><strong>@product.Price.ToString("F2") лв.</strong></p>
-                        <span class="badge bg-secondary">@product.Category</span>
+            <div class="col-md-3">
+                <div class="card h-100 border-0 shadow-sm product-card">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" style="height: 300px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title">@product.Name</h6>
+                        <p class="text-muted small mb-1">@product.Brand</p>
+                        <div class="mt-auto">
+                            <p class="fw-bold mb-2">@product.Price.ToString("F2") лв.</p>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a asp-controller="Cart" asp-action="AddItem" asp-route-productId="@product.ProductId" class="btn btn-dark btn-sm w-100">
+                                    <i class="bi bi-cart-plus"></i> Добави
+                                </a>
+                            }
+                            <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId" class="btn btn-outline-secondary btn-sm w-100 mt-1">Детайли</a>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
-    <div class="text-center">
-        <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Виж всички продукти</a>
+</div>
+
+<!-- Newsletter / CTA -->
+<div class="bg-light py-5">
+    <div class="container text-center">
+        <h3>Готов ли си да обновиш гардероба си?</h3>
+        <p class="text-muted">Разгледай нашите колекции и избери своите любими парчета.</p>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-dark btn-lg">Виж всички продукти</a>
     </div>
-}
+</div>
+
+<style>
+    .category-card:hover { transform: translateY(-5px); transition: 0.3s; }
+    .product-card:hover { transform: translateY(-5px); transition: 0.3s; box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important; }
+</style>

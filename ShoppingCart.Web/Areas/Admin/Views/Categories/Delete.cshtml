@@ -1,0 +1,21 @@
+@model Category
+@{
+    ViewData["Title"] = "Изтриване на " + Model.Name;
+}
+
+<h4>Сигурни ли сте, че искате да изтриете тази категория?</h4>
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <h5>@Model.Name</h5>
+        <p>@Model.Description</p>
+        @if (ViewData.ModelState.ErrorCount > 0)
+        {
+            <div asp-validation-summary="All" class="text-danger"></div>
+        }
+    </div>
+</div>
+<form asp-action="Delete" method="post" class="mt-3">
+    <input type="hidden" asp-for="CategoryId" />
+    <button type="submit" class="btn btn-danger">Изтрий</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Отказ</a>
+</form>

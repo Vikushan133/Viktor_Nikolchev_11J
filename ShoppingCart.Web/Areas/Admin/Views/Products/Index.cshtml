@@ -1,0 +1,42 @@
+@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Продукти";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Продукти</h4>
+    <a asp-action="Create" class="btn btn-dark"><i class="bi bi-plus"></i> Нов продукт</a>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Изображение</th>
+            <th>Име</th>
+            <th>Марка</th>
+            <th>Цена</th>
+            <th>Категория</th>
+            <th>Наличност</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.ProductId</td>
+                <td><img src="@product.ImageUrl" style="height: 50px; width: 50px; object-fit: cover;" alt=""></td>
+                <td>@product.Name</td>
+                <td>@product.Brand</td>
+                <td>@product.Price.ToString("F2") лв.</td>
+                <td>@product.CategoryRef?.Name</td>
+                <td>@product.StockQuantity</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@product.ProductId" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                    <a asp-action="Delete" asp-route-id="@product.ProductId" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

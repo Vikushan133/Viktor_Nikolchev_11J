@@ -1,0 +1,57 @@
+@model Product
+@{
+    ViewData["Title"] = "Нов продукт";
+}
+
+<h4>Нов продукт</h4>
+<form asp-action="Create" method="post">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" required />
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Brand" class="form-label"></label>
+            <input asp-for="Brand" class="form-control" required />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="Price" class="form-label"></label>
+            <input asp-for="Price" class="form-control" step="0.01" required />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="StockQuantity" class="form-label">Наличност</label>
+            <input asp-for="StockQuantity" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="CategoryId" class="form-label">Категория</label>
+            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="ImageUrl" class="form-label">URL на изображение</label>
+            <input asp-for="ImageUrl" class="form-control" />
+        </div>
+        <div class="col-md-3 mb-3">
+            <label asp-for="Color" class="form-label"></label>
+            <input asp-for="Color" class="form-control" />
+        </div>
+        <div class="col-md-3 mb-3">
+            <label asp-for="Size" class="form-label"></label>
+            <input asp-for="Size" class="form-control" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Category" class="form-label">Категория (текст)</label>
+        <input asp-for="Category" class="form-control" />
+        <span class="text-muted small">Старо поле за категория (може да се остави празно)</span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Description" class="form-label"></label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-dark">Създай</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Отказ</a>
+</form>

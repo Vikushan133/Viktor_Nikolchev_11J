@@ -1,0 +1,42 @@
+@model Product
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Начало</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="Index">Продукти</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <div class="col-md-6">
+            <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.Name">
+        </div>
+        <div class="col-md-6">
+            <span class="badge bg-dark mb-2">@Model.Category</span>
+            <h1 class="display-6">@Model.Name</h1>
+            <p class="text-muted">@Model.Brand</p>
+            <h2 class="fw-bold text-dark mb-3">@Model.Price.ToString("F2") лв.</h2>
+            <p>@Model.Description</p>
+            <ul class="list-unstyled">
+                <li><strong>Цвят:</strong> @Model.Color</li>
+                <li><strong>Размери:</strong> @Model.Size</li>
+                <li><strong>Наличност:</strong> @(Model.StockQuantity > 0 ? "В наличност" : "Изчерпан") (@Model.StockQuantity бр.)</li>
+            </ul>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Cart" asp-action="AddItem" asp-route-productId="@Model.ProductId" class="btn btn-dark btn-lg w-100 mt-3">
+                    <i class="bi bi-cart-plus"></i> Добави в количка
+                </a>
+            }
+            else
+            {
+                <div class="alert alert-info mt-3">Моля, <a asp-controller="Account" asp-action="Login">влезте</a> за да добавяте продукти в количката.</div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "Поръчки";
+}
+
+<h4>Поръчки</h4>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Потребител</th>
+            <th>Дата</th>
+            <th>Сума</th>
+            <th>Статус</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>#@order.OrderId</td>
+                <td>@order.UserId</td>
+                <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@order.TotalPrice.ToString("F2") лв.</td>
+                <td><span class="badge @(order.Status == "Ordered" ? "bg-warning" : "bg-success")">@order.Status</span></td>
+                <td><a asp-action="Details" asp-route-id="@order.OrderId" class="btn btn-sm btn-outline-dark">Детайли</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

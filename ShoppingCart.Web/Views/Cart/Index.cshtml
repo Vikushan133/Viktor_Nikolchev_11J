@@ -1,48 +1,54 @@
-@model IEnumerable<ShoppingCart.Models.Cart>
-
+@model Cart
 @{
-    ViewData["Title"] = "Колички";
+    ViewData["Title"] = "Моята количка";
 }
 
-<h1>Колички</h1>
+<div class="container py-4">
+    <h1 class="mb-4"><i class="bi bi-cart"></i> Моята количка</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Създай количка</a>
-</p>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Клиент</th>
-            <th>Дата</th>
-            <th>Обща цена</th>
-            <th>Статус</th>
-            <th>Адрес</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.CartId</td>
-                <td>@item.CustomerName</td>
-                <td>@item.DateCreated.ToShortDateString()</td>
-                <td>@item.TotalPrice.ToString("F2") лв.</td>
-                <td>
-                    <span class="badge @(item.Status == ShoppingCart.Models.CartStatus.Active ? "bg-success" :
-                        item.Status == ShoppingCart.Models.CartStatus.Ordered ? "bg-warning" : "bg-secondary")">
-                        @item.Status
-                    </span>
-                </td>
-                <td>@item.Address</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.CartId" class="btn btn-sm btn-info">Детайли</a>
-                    <a asp-action="EditStatus" asp-route-id="@item.CartId" class="btn btn-sm btn-warning">Статус</a>
-                    <a asp-action="Delete" asp-route-id="@item.CartId" class="btn btn-sm btn-danger">Изтрий</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    @if (Model == null || Model.CartItems.Count == 0)
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-cart-x" style="font-size: 4rem;"></i>
+            <h3 class="mt-3">Количката е празна</h3>
+            <p class="text-muted">Разгледай нашите продукти и добави нещо в количката.</p>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-dark">Разгледай продуктите</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-8">
+                @foreach (var item in Model.CartItems)
+                {
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="row g-0">
+                            <div class="col-md-3">
+                                <img src="@item.Product?.ImageUrl" class="img-fluid rounded-start" alt="@item.Product?.Name" style="height: 150px; object-fit: cover; width: 100%;">
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.Product?.Name</h5>
+                                    <p class="card-text text-muted">@item.UnitPrice.ToString("F2") лв. x @item.Quantity</p>
+                                    <p class="fw-bold">@((item.Quantity * item.UnitPrice).ToString("F2")) лв.</p>
+                                    <a asp-action="RemoveItem" asp-route-cartItemId="@item.CartItemId" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Премахни
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Обща цена</h5>
+                        <p class="display-6 fw-bold">@Model.TotalPrice.ToString("F2") лв.</p>
+                        <a asp-action="Checkout" class="btn btn-dark w-100">Продължи към плащане</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

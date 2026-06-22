@@ -21,12 +21,17 @@ namespace ShoppingCart.Services
 
         public List<Product> GetAll()
         {
-            return _context.Products.OrderBy(p => p.Name).ToList();
+            return _context.Products.Include(p => p.CategoryRef).OrderBy(p => p.Name).ToList();
+        }
+
+        public List<Product> GetByCategory(int categoryId)
+        {
+            return _context.Products.Include(p => p.CategoryRef).Where(p => p.CategoryId == categoryId).OrderBy(p => p.Name).ToList();
         }
 
         public Product GetById(int id)
         {
-            return _context.Products.Find(id);
+            return _context.Products.Include(p => p.CategoryRef).FirstOrDefault(p => p.ProductId == id);
         }
 
         public void Update(Product product)

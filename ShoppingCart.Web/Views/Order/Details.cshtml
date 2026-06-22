@@ -1,0 +1,52 @@
+@model Order
+@{
+    ViewData["Title"] = "Поръчка #" + Model.OrderId;
+}
+
+<div class="container py-4">
+    <h1 class="mb-4">Поръчка #@Model.OrderId</h1>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5>Детайли</h5>
+                    <p><strong>Дата:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
+                    <p><strong>Статус:</strong> <span class="badge bg-warning">@Model.Status</span></p>
+                    <p><strong>Адрес:</strong> @Model.ShippingAddress</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h5>Артикули</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Продукт</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Общо</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderItems)
+            {
+                <tr>
+                    <td>@(item.Product?.Name ?? "Неизвестен")</td>
+                    <td>@item.UnitPrice.ToString("F2") лв.</td>
+                    <td>@item.Quantity</td>
+                    <td>@((item.Quantity * item.UnitPrice).ToString("F2")) лв.</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="fw-bold">
+                <td colspan="3" class="text-end">Общо:</td>
+                <td>@Model.TotalPrice.ToString("F2") лв.</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <a asp-action="Index" class="btn btn-outline-dark"><i class="bi bi-arrow-left"></i> Обратно</a>
+</div>

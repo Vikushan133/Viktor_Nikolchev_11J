@@ -1,6 +1,10 @@
 bin/
 obj/
 *.db
+*.db-shm
+*.db-wal
+fashionstore.db-shm
+fashionstore.db-wal
 *.user
 ~*
 .vs/

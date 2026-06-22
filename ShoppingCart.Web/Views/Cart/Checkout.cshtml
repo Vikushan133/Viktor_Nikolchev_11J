@@ -1,0 +1,48 @@
+@model Cart
+@{
+    ViewData["Title"] = "Плащане";
+}
+
+<div class="container py-4">
+    <h1 class="mb-4"><i class="bi bi-credit-card"></i> Плащане</h1>
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Детайли за доставка</h5>
+                    <form asp-action="Checkout" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Име</label>
+                            <input value="@User.Identity.Name" class="form-control" disabled />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Адрес за доставка</label>
+                            <textarea name="address" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100">Завърши поръчката</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Резюме на поръчката</h5>
+                    @foreach (var item in Model.CartItems)
+                    {
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>@item.Product?.Name x @item.Quantity</span>
+                            <span>@((item.Quantity * item.UnitPrice).ToString("F2")) лв.</span>
+                        </div>
+                    }
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Общо:</span>
+                        <span>@Model.TotalPrice.ToString("F2") лв.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Табло";
+}
+
+<h4>Добре дошли в административния панел</h4>
+<p class="text-muted">Тук можете да управлявате продуктите, категориите, поръчките и потребителите.</p>
+
+<div class="row g-4 mt-2">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-box" style="font-size: 2rem;"></i>
+                <h2>@ViewBag.TotalProducts</h2>
+                <p class="mb-0">Продукти</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-success text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-tags" style="font-size: 2rem;"></i>
+                <h2>@ViewBag.TotalCategories</h2>
+                <p class="mb-0">Категории</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-warning text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-truck" style="font-size: 2rem;"></i>
+                <h2>@ViewBag.TotalOrders</h2>
+                <p class="mb-0">Поръчки</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-info text-white">
+            <div class="card-body text-center">
+                <i class="bi bi-people" style="font-size: 2rem;"></i>
+                <h2>@ViewBag.TotalUsers</h2>
+                <p class="mb-0">Потребители</p>
+            </div>
+        </div>
+    </div>
+</div>

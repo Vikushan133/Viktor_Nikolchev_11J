@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ShoppingCart.Models;
 using ShoppingCart.Services;
 
@@ -13,10 +14,21 @@ public class ProductController : Controller
         _productService = productService;
     }
 
-    public IActionResult Index()
+    public IActionResult Index(int? categoryId)
     {
-        var products = _productService.GetAll();
+        var products = categoryId.HasValue
+            ? _productService.GetByCategory(categoryId.Value)
+            : _productService.GetAll();
+        ViewBag.CategoryId = categoryId;
         return View(products);
+    }
+
+    public IActionResult Details(int id)
+    {
+        var product = _productService.GetById(id);
+        if (product == null)
+            return NotFound();
+        return View(product);
     }
 
     public IActionResult Create()

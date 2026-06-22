@@ -30,6 +30,14 @@ namespace ShoppingCart.Services
                 .FirstOrDefault(c => c.CartId == id);
         }
 
+        public Cart GetActiveCartByUser(string userId)
+        {
+            return _context.Carts
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Product)
+                .FirstOrDefault(c => c.UserId == userId && c.Status == CartStatus.Active);
+        }
+
         public List<Cart> GetAllCarts()
         {
             return _context.Carts
